@@ -16,6 +16,7 @@ permissions:
 
 jobs:
   publish-chocolatey:
+    if: github.repository == 'plecos/logrotatewin'
     runs-on: windows-latest
 
     steps:

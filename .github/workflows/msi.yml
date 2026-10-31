@@ -1,0 +1,58 @@
+name: Windows MSI packages
+on:
+  push:
+    branches: [master]
+    paths: ['New-WindowsMsi.ps1', 'powershell/**', 'packaging/**', 'tests/Test-WindowsMsi.ps1', '.github/workflows/msi.yml']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86, x64]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install MSI compiler
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends wixl git
+      - name: Download pinned upstream input
+        run: curl --fail --location --retry 3 https://github.com/plecos/logrotatewin/releases/download/v0.0.59/logrotatewin-0.0.59.zip -o "$RUNNER_TEMP/upstream.zip"
+      - name: Build package and corresponding source
+        shell: pwsh
+        run: ./New-WindowsMsi.ps1 -ArchivePath "$env:RUNNER_TEMP/upstream.zip" -OutputDirectory "$env:RUNNER_TEMP/package" -Architecture '${{ matrix.arch }}'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: logrotatewin-${{ matrix.arch }}
+          path: |
+            ${{ runner.temp }}/package/*.msi
+            ${{ runner.temp }}/package/*.tar.gz
+            ${{ runner.temp }}/package/SHA256SUMS
+  lifecycle:
+    needs: package
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86, x64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: logrotatewin-${{ matrix.arch }}
+          path: ${{ runner.temp }}/package
+      - name: Install, repair, rotate and uninstall
+        shell: pwsh
+        run: |
+          $directory = Join-Path $env:RUNNER_TEMP 'package'
+          $package = Join-Path $directory 'logrotatewin-0.0.59-windows-${{ matrix.arch }}.msi'
+          $line = Get-Content (Join-Path $directory 'SHA256SUMS') | Where-Object { $_ -match '\.msi$' }
+          $hash = ($line -split '\s+')[0]
+          ./tests/Test-WindowsMsi.ps1 -PackagePath $package -ExpectedSHA256 $hash -TestDirectory "$env:RUNNER_TEMP/msi-test" -Architecture '${{ matrix.arch }}'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lifecycle-${{ matrix.arch }}
+          path: ${{ runner.temp }}/msi-test/*.log

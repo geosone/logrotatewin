@@ -20,3 +20,10 @@ or an existing default installation directory. No scheduling is installed.
 Mystic-specific configuration, event integration and platform dependencies belong
 to mysticd, not this program repository. A passing package test does not qualify
 native Mystic midnight log handling.
+
+## Native qualification
+
+On 2026-10-31, both packages passed installation, repair of a deleted runtime,
+actual gzip rotation, continued writes, and uninstall on the dedicated Windows
+10 x86 and x64 VMs. External configuration and logs were preserved. This does
+not qualify native Mystic midnight behavior or lossless copytruncate.
