@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="7EE100F6-E851-5096-9270-6DE4F39398C4" Name="LogRotateWin 0.0.59 (x86)" Language="1033" Version="0.0.59" Manufacturer="Disconnected by Peer AT" UpgradeCode="AF068E66-611D-5E7F-9761-3C510DEEF0B9">
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
+    <Media Id="1" Cabinet="logrotatewin.cab" EmbedCab="yes" />
+    <Property Id="NETFRAMEWORKRELEASE">
+      <RegistrySearch Id="Net48Search" Root="HKLM" Key="SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" Name="Release" Type="raw" />
+    </Property>
+    <Condition Message="The .NET Framework 4.8 runtime is required.">Installed OR NETFRAMEWORKRELEASE &gt;= "#528040"</Condition>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="LogRotateWin">
+          <Component Id="Runtime" Guid="5206E6B8-B519-5378-BF10-86570280141E" Win64="no">
+            <File Id="RuntimeFile" Source="$(var.PayloadDirectory)/logrotate.exe" KeyPath="yes" />
+          </Component>
+          <Component Id="RuntimeConfig" Guid="CB6233E6-2E62-5449-AFFA-48F0E16D61F8" Win64="no">
+            <File Id="RuntimeConfigFile" Source="$(var.PayloadDirectory)/logrotate.exe.config" KeyPath="yes" />
+          </Component>
+          <Component Id="License" Guid="ECC389F2-26B0-5A90-AF49-753B99AAE2CF" Win64="no">
+            <File Id="LicenseFile" Source="$(var.PayloadDirectory)/LICENSE.txt" KeyPath="yes" />
+          </Component>
+          <Component Id="Packaging" Guid="DF01CB25-E23B-5BD7-A83C-5BE7CEF79F83" Win64="no">
+            <File Id="PackagingFile" Source="$(var.PayloadDirectory)/PACKAGING.txt" KeyPath="yes" />
+          </Component>
+          <Component Id="SourceNotice" Guid="947A73F3-5C1D-5C93-A294-25AF7B56A384" Win64="no">
+            <File Id="SourceNoticeFile" Source="$(var.PayloadDirectory)/SOURCE-NOTICE.txt" KeyPath="yes" />
+          </Component>
+          <Directory Id="CONTENTFOLDER" Name="Content">
+            <Component Id="UpstreamLicense" Guid="C4106D86-D2D8-59E6-B982-94E3F118A029" Win64="no">
+              <File Id="UpstreamLicenseFile" Source="$(var.PayloadDirectory)/Content/gnu_license.rtf" KeyPath="yes" />
+            </Component>
+            <Component Id="ExampleConfig" Guid="D741B363-1582-5274-B591-B4AD4B74FDD0" Win64="no">
+              <File Id="ExampleConfigFile" Source="$(var.PayloadDirectory)/Content/logrotate.conf" KeyPath="yes" />
+            </Component>
+            <Component Id="UpstreamReadme" Guid="F5DC70D5-5D9D-5665-A594-506B709789C8" Win64="no">
+              <File Id="UpstreamReadmeFile" Source="$(var.PayloadDirectory)/Content/README.md" KeyPath="yes" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+    <Feature Id="Main" Title="LogRotateWin runtime and documentation" Level="1">
+      <ComponentRef Id="Runtime" />
+      <ComponentRef Id="RuntimeConfig" />
+      <ComponentRef Id="License" />
+      <ComponentRef Id="Packaging" />
+      <ComponentRef Id="SourceNotice" />
+      <ComponentRef Id="UpstreamLicense" />
+      <ComponentRef Id="ExampleConfig" />
+      <ComponentRef Id="UpstreamReadme" />
+    </Feature>
+  </Product>
+</Wix>
