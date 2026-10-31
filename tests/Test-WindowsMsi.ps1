@@ -84,15 +84,15 @@ try {
     if ($archives.Count -ne 1) {
         throw 'Expected exactly one compressed archive.'
     }
-    $input = [IO.File]::OpenRead($archives[0].FullName)
-    $gzip = [IO.Compression.GZipStream]::new($input, [IO.Compression.CompressionMode]::Decompress)
+    $archiveStream = [IO.File]::OpenRead($archives[0].FullName)
+    $gzip = [IO.Compression.GZipStream]::new($archiveStream, [IO.Compression.CompressionMode]::Decompress)
     $reader = [IO.StreamReader]::new($gzip)
     try {
         $content = $reader.ReadToEnd()
     } finally {
         $reader.Dispose()
         $gzip.Dispose()
-        $input.Dispose()
+        $archiveStream.Dispose()
     }
     if ($content -ne "fixture-before`n" -or [IO.File]::ReadAllText($log) -ne '') {
         throw 'Compressed contents or truncation differ.'

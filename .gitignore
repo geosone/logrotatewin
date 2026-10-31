@@ -199,3 +199,7 @@ chocolatey/*.nupkg
 
 # Nerdbank.GitVersioning
 version.txt
+
+# Packaging architecture directories are source, not build outputs.
+!packaging/windows/x64/
+!packaging/windows/x64/logrotatewin.wxs
