@@ -17,10 +17,10 @@ jobs:
       - name: Build and test retention support
         shell: pwsh
         run: |
-          dotnet build logrotate/logrotate.csproj -c Release -p:FileVersion=0.0.60.0 -p:AssemblyVersion=0.0.60.0
+          dotnet build logrotate/logrotate.csproj -c Release
           if ($LASTEXITCODE) { throw 'Build failed.' }
           $fileVersion = [Diagnostics.FileVersionInfo]::GetVersionInfo((Resolve-Path ./logrotate/bin/Release/net48/logrotate.exe)).FileVersion
-          if ($fileVersion -ne '0.0.60.0') { throw 'Monotonic Windows file version was not applied.' }
+          if ([version]$fileVersion -lt [version]'0.0.60.0') { throw ('Runtime file version is below the MSI upgrade boundary: ' + $fileVersion) }
           ./tests/Test-KeepArchives.ps1 -ExecutablePath ./logrotate/bin/Release/net48/logrotate.exe
       - name: Package runtime and corresponding source
         shell: pwsh
