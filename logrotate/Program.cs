@@ -961,7 +961,8 @@ namespace logrotate
             // iterate through array, determine if file needs to be removed or emailed
             if (lrc.DateExt == true)
             {
-                for (int rotation_counter = lrc.Rotate - 1; rotation_counter < fis.Length; rotation_counter++)
+                // rotate -1 retains all archives; explicit maxage above remains independent.
+                for (int rotation_counter = Math.Max(0, lrc.Rotate - 1); lrc.Rotate >= 0 && rotation_counter < fis.Length; rotation_counter++)
                 {
                     // remove any entries that are past the rotation limit
                     RemoveOldRotateFile(fi.FullName, lrc, fis[rotation_counter]);
@@ -983,7 +984,7 @@ namespace logrotate
                             break;
                         }
                     }
-                    if (Convert.ToInt32(exts[i]) >= lrc.Rotate)
+                    if (lrc.Rotate >= 0 && Convert.ToInt32(exts[i]) >= lrc.Rotate)
                     {
                         // too old!
                         RemoveOldRotateFile(fi.FullName, lrc, m_fi);

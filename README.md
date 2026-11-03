@@ -155,3 +155,13 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "Error occurred: exit code $LASTEXITCODE"
 }
 ```
+
+## Mysticd fork: unlimited archive retention
+
+The retention fix supports `rotate -1`: existing dated archives are retained
+instead of indexing the archive list with a negative number. Numeric rotation
+also avoids count-based deletion when rotate is negative. Explicit `maxage`
+remains independent, matching the external tool's policy distinction.
+`tests/Test-KeepArchives.ps1` exercises the built executable with both compression
+modes. Application code remains GPL-3.0-or-later. The original 0.0.59 MSI binaries
+predate this fix and must not be used with rotate -1.

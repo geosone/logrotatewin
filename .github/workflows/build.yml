@@ -58,6 +58,10 @@ jobs:
         }
       shell: pwsh
 
+    - name: Qualify unlimited archive retention
+      shell: pwsh
+      run: ./tests/Test-KeepArchives.ps1 -ExecutablePath ./logrotate/bin/Release/net48/logrotate.exe
+
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
