@@ -1,0 +1,46 @@
+name: Retention runtime release
+on:
+  push:
+    tags: ['v*-retain.*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build and test retention support
+        shell: pwsh
+        run: |
+          dotnet build logrotate/logrotate.csproj -c Release
+          if ($LASTEXITCODE) { throw 'Build failed.' }
+          ./tests/Test-KeepArchives.ps1 -ExecutablePath ./logrotate/bin/Release/net48/logrotate.exe
+      - name: Package runtime and corresponding source
+        shell: pwsh
+        run: |
+          $out = Join-Path $env:RUNNER_TEMP 'release'
+          New-Item -ItemType Directory $out | Out-Null
+          $payload = './logrotate/bin/Release/net48'
+          Copy-Item LICENSE (Join-Path $payload 'LICENSE.txt')
+          Copy-Item README.md (Join-Path $payload 'FORK-README.md')
+          Get-ChildItem $payload -Filter '*.pdb' | Remove-Item
+          $version = $env:GITHUB_REF_NAME
+          "Source commit: $env:GITHUB_SHA`nGPL-3.0-or-later. Corresponding source accompanies this archive.`nAnyCPU .NET Framework 4.8, x86/x64 Windows." | Set-Content (Join-Path $payload 'SOURCE-NOTICE.txt')
+          Compress-Archive "$payload/*" (Join-Path $out "logrotatewin-$version-windows.zip")
+          git archive --format=tar.gz --prefix=logrotatewin/ -o (Join-Path $out "logrotatewin-$version-source.tar.gz") HEAD
+          if ($LASTEXITCODE) { throw 'Source archive failed.' }
+          $lines = Get-ChildItem $out -File | ForEach-Object { (Get-FileHash $_.FullName).Hash.ToLowerInvariant() + '  ' + $_.Name }
+          [IO.File]::WriteAllLines((Join-Path $out 'SHA256SUMS'), $lines)
+      - name: Publish qualified runtime prerelease
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $files = Get-ChildItem (Join-Path $env:RUNNER_TEMP 'release') -File | ForEach-Object FullName
+          gh release create $env:GITHUB_REF_NAME @files --prerelease --title "LogRotateWin $env:GITHUB_REF_NAME" --notes 'Supports rotate -1, with and without compression. Native executable tests run before publishing. AnyCPU .NET Framework 4.8; unsigned. Corresponding source and SHA256SUMS included. Original 0.0.59 MSI packages predate this fix.'
+          if ($LASTEXITCODE) { throw 'Release publication failed.' }
