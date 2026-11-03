@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="9C96788E-4AE6-5EDC-84EA-0B6087A7C257" Name="LogRotateWin 0.0.59 (x64)" Language="1033" Version="0.0.59" Manufacturer="Disconnected by Peer AT" UpgradeCode="9A1A26A2-2FF8-5180-9381-91E032433347">
+  <Product Id="FFC2741A-B094-5B28-9713-2D94482BF58B" Name="LogRotateWin 0.0.60 (x64)" Language="1033" Version="0.0.60" Manufacturer="Disconnected by Peer AT" UpgradeCode="9A1A26A2-2FF8-5180-9381-91E032433347">
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
+    <Upgrade Id="9A1A26A2-2FF8-5180-9381-91E032433347">
+      <UpgradeVersion Minimum="0.0.0" Maximum="0.0.60" IncludeMinimum="yes" IncludeMaximum="no" Property="OLDPRODUCTS" />
+      <UpgradeVersion Minimum="0.0.60" IncludeMinimum="no" OnlyDetect="yes" Property="NEWERPRODUCTS" />
+    </Upgrade>
+    <Property Id="OLDPRODUCTS" Secure="yes" />
+    <Property Id="NEWERPRODUCTS" Secure="yes" />
+    <Condition Message="A newer LogRotateWin package is already installed.">Installed OR NOT NEWERPRODUCTS</Condition>
+    <InstallExecuteSequence>
+      <RemoveExistingProducts After="InstallInitialize">OLDPRODUCTS</RemoveExistingProducts>
+    </InstallExecuteSequence>
     <Media Id="1" Cabinet="logrotatewin.cab" EmbedCab="yes" />
     <Property Id="NETFRAMEWORKRELEASE">
       <RegistrySearch Id="Net48Search" Root="HKLM" Key="SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" Name="Release" Type="raw" />

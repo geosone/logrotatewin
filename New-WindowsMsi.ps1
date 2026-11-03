@@ -1,9 +1,9 @@
 #Requires -Version 7.4
 <#
 .SYNOPSIS
-Builds x86 or x64 Windows Installer packaging for the pinned upstream release.
+Builds x86 or x64 Windows Installer packaging for the pinned retention runtime release.
 .DESCRIPTION
-Runs on Linux with wixl. The AnyCPU upstream executable is unchanged. Architecture
+Runs on Linux with wixl. The qualified AnyCPU executable is copied from its checksum-pinned release. Architecture
 selects the MSI installation context and Program Files directory, not a rebuild
 of the application. No service, task, firewall rule or global PATH is installed.
 #>

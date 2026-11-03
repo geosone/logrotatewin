@@ -51,6 +51,7 @@ try {
             throw "Installed payload missing: $file"
         }
     }
+    & (Join-Path $PSScriptRoot 'Test-KeepArchives.ps1') -ExecutablePath $exe
     $originalHash = (Get-FileHash $exe).Hash
     Remove-Item -LiteralPath $exe
     Invoke-Msi '/fa' 'repair.log'
