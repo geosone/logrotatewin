@@ -11,9 +11,9 @@ if (!$IsLinux) {
 }
 $null = Get-Command wixl -ErrorAction Stop
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../..'))
-$expected = '095268064dcf09f4c60dd7c60c05483073ef4f909c739d4ddfca2e60f98511de'
+$expected = '965ec8573eddf43533d83d817f5a827a685424b0d9adf3454e69ff053d427fc8'
 if ((Get-FileHash -LiteralPath $ArchivePath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expected) {
-    throw 'The input must be the pinned LogRotateWin 0.0.59-retain.1 runtime ZIP.'
+    throw 'The input must be the pinned LogRotateWin 0.0.60-retain.2 runtime ZIP.'
 }
 $output = [IO.Path]::GetFullPath($OutputDirectory)
 if (Test-Path -LiteralPath $output) {
@@ -37,8 +37,8 @@ if ($LASTEXITCODE) {
 }
 $sourceCommit = (& git -C $root rev-parse HEAD).Trim()
 $notice = @"
-LogRotateWin runtime: 0.0.59-retain.1 (AnyCPU .NET Framework 4.8, rotate -1 fix)
-Runtime source commit: 36693c3; application code matches that qualified release.
+LogRotateWin runtime: 0.0.60-retain.2 (AnyCPU .NET Framework 4.8, rotate -1 fix)
+Runtime source commit: 296416d; application code matches that qualified release.
 Qualified runtime ZIP SHA256: $expected
 Packaging source commit: $sourceCommit
 License: GPL-3.0-or-later. See LICENSE.txt and upstream notices.

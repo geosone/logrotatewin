@@ -5,7 +5,7 @@ https://github.com/plecos/logrotatewin
 Packaging maintained at https://github.com/geosone/logrotatewin
 
 The application is licensed GPL-3.0-or-later. This MSI contains the qualified
-0.0.59-retain.1 AnyCPU .NET Framework 4.8 runtime, including the rotate -1 fix.
+0.0.60-retain.2 AnyCPU .NET Framework 4.8 runtime, including the rotate -1 fix.
 The x86/x64 designation selects the installer context and installation folder.
 It does not claim a separately compiled native executable.
 
