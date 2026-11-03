@@ -21,7 +21,7 @@
       <Directory Id="ProgramFilesFolder">
         <Directory Id="INSTALLFOLDER" Name="LogRotateWin">
           <Component Id="Runtime" Guid="5206E6B8-B519-5378-BF10-86570280141E" Win64="no">
-            <File Id="RuntimeFile" Source="$(var.PayloadDirectory)/logrotate.exe" KeyPath="yes" />
+            <File Id="RuntimeFile" DefaultVersion="0.0.60.2" Source="$(var.PayloadDirectory)/logrotate.exe" KeyPath="yes" />
           </Component>
           <Component Id="RuntimeConfig" Guid="CB6233E6-2E62-5449-AFFA-48F0E16D61F8" Win64="no">
             <File Id="RuntimeConfigFile" Source="$(var.PayloadDirectory)/logrotate.exe.config" KeyPath="yes" />
