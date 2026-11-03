@@ -20,7 +20,10 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
         <Directory Id="INSTALLFOLDER" Name="LogRotateWin">
-          <Component Id="Runtime" Guid="5206E6B8-B519-5378-BF10-86570280141E" Win64="no">
+          <!-- The qualified fork has an independent file-version sequence.
+               A new runtime component prevents MSI treating upstream's keyfile
+               version as a newer copy of this component during major upgrade. -->
+          <Component Id="Runtime" Guid="BA68388A-9713-5C01-B3E8-54337A05D5C9" Win64="no">
             <File Id="RuntimeFile" Source="$(var.PayloadDirectory)/logrotate.exe" KeyPath="yes" />
           </Component>
           <Component Id="RuntimeConfig" Guid="CB6233E6-2E62-5449-AFFA-48F0E16D61F8" Win64="no">

@@ -30,7 +30,7 @@ function Invoke-Package {
     $arguments = @($Mode, ('"' + $Path + '"'), '/qn', '/norestart', '/L*v', ('"' + (Join-Path $TestDirectory $Name) + '"'))
     $process = Start-Process msiexec.exe -ArgumentList $arguments -Wait -PassThru
     if ($process.ExitCode -ne 0) {
-        throw ('MSI operation failed: ' + $Name)
+        throw ('MSI operation failed: ' + $Name + '; exit=' + $process.ExitCode)
     }
 }
 $oldActive = $false
