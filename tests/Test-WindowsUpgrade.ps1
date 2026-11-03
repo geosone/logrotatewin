@@ -8,6 +8,8 @@ param(
     [Parameter(Mandatory)][string]$TestDirectory
 )
 $ErrorActionPreference = 'Stop'
+$OldPackage = [IO.Path]::GetFullPath($OldPackage)
+$NewPackage = [IO.Path]::GetFullPath($NewPackage)
 $programs = if ($Architecture -eq 'x64') {
     $env:ProgramW6432
 } elseif ($env:ProgramW6432) {
