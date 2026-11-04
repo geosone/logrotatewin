@@ -28,7 +28,11 @@ $oldCode = if ($Architecture -eq 'x64') {
     '{7EE100F6-E851-5096-9270-6DE4F39398C4}'
 }
 function Invoke-Package {
-    param([string]$Mode, [string]$Path, [string]$Name)
+    param(
+        [string]$Mode,
+        [string]$Path,
+        [string]$Name
+    )
     $arguments = @($Mode, ('"' + $Path + '"'), '/qn', '/norestart', '/L*v', ('"' + (Join-Path $TestDirectory $Name) + '"'))
     $process = Start-Process msiexec.exe -ArgumentList $arguments -Wait -PassThru
     if ($process.ExitCode -ne 0) {

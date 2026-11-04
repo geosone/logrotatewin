@@ -36,7 +36,10 @@ if ($framework.Release -lt 528040) {
 }
 $null = New-Item -ItemType Directory $TestDirectory
 $msi = [IO.Path]::GetFullPath($PackagePath)
-function Invoke-Msi([string]$Mode, [string]$LogName) {
+function Invoke-Msi(
+    [string]$Mode,
+    [string]$LogName
+) {
     $arguments = @($Mode, ('"' + $msi + '"'), '/qn', '/norestart', '/L*v', ('"' + (Join-Path $TestDirectory $LogName) + '"'))
     $process = Start-Process msiexec.exe -ArgumentList $arguments -Wait -PassThru
     if ($process.ExitCode -ne 0) {

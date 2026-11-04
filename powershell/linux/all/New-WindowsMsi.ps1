@@ -59,8 +59,8 @@ $artifactHash = (Get-FileHash $msi -Algorithm SHA256).Hash.ToLowerInvariant()
 $sourceHash = (Get-FileHash (Join-Path $output $sourceName) -Algorithm SHA256).Hash.ToLowerInvariant()
 [IO.File]::WriteAllText((Join-Path $output 'SHA256SUMS'), "$artifactHash  $([IO.Path]::GetFileName($msi))`n$sourceHash  $sourceName`n")
 [pscustomobject]@{
-    Package = $msi
+    Package      = $msi
     Architecture = $Architecture
-    SHA256 = $artifactHash
-    Source = (Join-Path $output $sourceName)
+    SHA256       = $artifactHash
+    Source       = (Join-Path $output $sourceName)
 }
