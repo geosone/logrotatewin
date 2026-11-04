@@ -14,6 +14,8 @@ if (!$IsWindows) {
 if ((Get-FileHash -LiteralPath $PackagePath).Hash -ine $ExpectedSHA256) {
     throw 'MSI checksum mismatch.'
 }
+. (Join-Path $PSScriptRoot 'test_windows_path.ps1')
+$beforePath = Get-TestMachinePath
 $programs = if ($Architecture -eq 'x64') {
     $env:ProgramW6432
 } elseif ($env:ProgramW6432) {
@@ -46,6 +48,8 @@ try {
     Invoke-Msi '/i' 'install.log'
     $active = $true
     $exe = Join-Path $installed 'logrotate.exe'
+    Assert-TestToolPath -Directory $installed -Before $beforePath
+    Assert-TestToolDiscovery -Executable $exe -WorkingDirectory $TestDirectory
     foreach ($file in 'logrotate.exe', 'logrotate.exe.config', 'LICENSE.txt', 'SOURCE-NOTICE.txt', 'PACKAGING.txt', 'Content/logrotate.conf') {
         if (!(Test-Path (Join-Path $installed $file))) {
             throw "Installed payload missing: $file"
@@ -58,6 +62,7 @@ try {
     if ((Get-FileHash $exe).Hash -ne $originalHash) {
         throw 'Repair did not restore the original runtime.'
     }
+    Assert-TestToolPath -Directory $installed -Before $beforePath
     $log = Join-Path $TestDirectory 'active.log'
     $state = Join-Path $TestDirectory 'rotation.state'
     $config = Join-Path $TestDirectory 'logrotate.conf'
@@ -101,6 +106,7 @@ try {
     [IO.File]::AppendAllText($log, "fixture-after`n")
     Invoke-Msi '/x' 'uninstall.log'
     $active = $false
+    Assert-TestToolPath -Directory $installed -Before $beforePath -Removed
     if ((Test-Path $exe) -or [IO.File]::ReadAllText($log) -ne "fixture-after`n" -or !(Test-Path $config)) {
         throw 'Uninstall left runtime files or damaged external log/configuration.'
     }

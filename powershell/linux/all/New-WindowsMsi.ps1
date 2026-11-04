@@ -44,16 +44,17 @@ Packaging source commit: $sourceCommit
 License: GPL-3.0-or-later. See LICENSE.txt and upstream notices.
 Corresponding source: $sourceName, supplied alongside the MSI.
 Fork: https://github.com/geosone/logrotatewin
-MSI package version: 0.0.60; package architecture: $Architecture
+MSI package version: 0.0.61; package architecture: $Architecture
 Unsigned package. Installs files only; no rotation schedule is activated.
 "@
 [IO.File]::WriteAllText((Join-Path $payload 'SOURCE-NOTICE.txt'), $notice)
-$msi = Join-Path $output "logrotatewin-0.0.60-windows-$Architecture.msi"
+$msi = Join-Path $output "logrotatewin-0.0.61-windows-$Architecture.msi"
 $template = Join-Path $root "packaging/windows/$Architecture/logrotatewin.wxs"
 & wixl -a $Architecture -D "PayloadDirectory=$payload" -o $msi $template
 if ($LASTEXITCODE) {
     throw 'wixl failed.'
 }
+& (Join-Path $root 'packaging/finalize_msi_path.ps1') -Package $msi -Component Runtime
 $artifactHash = (Get-FileHash $msi -Algorithm SHA256).Hash.ToLowerInvariant()
 $sourceHash = (Get-FileHash (Join-Path $output $sourceName) -Algorithm SHA256).Hash.ToLowerInvariant()
 [IO.File]::WriteAllText((Join-Path $output 'SHA256SUMS'), "$artifactHash  $([IO.Path]::GetFileName($msi))`n$sourceHash  $sourceName`n")

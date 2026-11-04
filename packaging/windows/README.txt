@@ -11,7 +11,8 @@ It does not claim a separately compiled native executable.
 
 Default installation: Program Files/LogRotateWin (architecture-specific).
 Requirements: Windows 10, .NET Framework 4.8. Packages are unsigned.
-No service, task, PATH change, Mystic configuration or automatic rotation is
+The MSI appends its directory to system PATH and removes that member on uninstall.
+Restart existing shells/services to inherit it. No service, task, Mystic configuration or automatic rotation is
 installed. Mutable configuration and state belong outside Program Files.
 Uninstall removes packaged files only; external logs/configuration remain.
 
