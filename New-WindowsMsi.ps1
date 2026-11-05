@@ -5,7 +5,8 @@ Builds x86 or x64 Windows Installer packaging for the pinned retention runtime r
 .DESCRIPTION
 Runs on Linux with wixl. The qualified AnyCPU executable is copied from its checksum-pinned release. Architecture
 selects the MSI installation context and Program Files directory, not a rebuild
-of the application. No service, task, firewall rule or global PATH is installed.
+of the application. The install directory is appended to the system PATH;
+no service, task or firewall rule is installed.
 #>
 [CmdletBinding()]
 param(

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="LogRotateWin 0.0.61 (x86)" Language="1033" Version="0.0.61" Manufacturer="Disconnected by Peer AT" UpgradeCode="AF068E66-611D-5E7F-9761-3C510DEEF0B9">
+  <Product Id="*" Name="LogRotateWin 0.0.62 (x86)" Language="1033" Version="0.0.62" Manufacturer="Disconnected by Peer AT" UpgradeCode="AF068E66-611D-5E7F-9761-3C510DEEF0B9">
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
     <Upgrade Id="AF068E66-611D-5E7F-9761-3C510DEEF0B9">
-      <UpgradeVersion Minimum="0.0.0" Maximum="0.0.61" IncludeMinimum="yes" IncludeMaximum="no" Property="OLDPRODUCTS" />
-      <UpgradeVersion Minimum="0.0.61" IncludeMinimum="no" OnlyDetect="yes" Property="NEWERPRODUCTS" />
+      <UpgradeVersion Minimum="0.0.0" Maximum="0.0.62" IncludeMinimum="yes" IncludeMaximum="no" Property="OLDPRODUCTS" />
+      <UpgradeVersion Minimum="0.0.62" IncludeMinimum="no" OnlyDetect="yes" Property="NEWERPRODUCTS" />
     </Upgrade>
     <Property Id="OLDPRODUCTS" Secure="yes" />
     <Property Id="NEWERPRODUCTS" Secure="yes" />
@@ -22,7 +22,7 @@
         <Directory Id="INSTALLFOLDER" Name="LogRotateWin">
           <Component Id="Runtime" Guid="5206E6B8-B519-5378-BF10-86570280141E" Win64="no">
 
-            <File Id="RuntimeFile" DefaultVersion="0.0.60.2" Source="$(var.PayloadDirectory)/logrotate.exe" KeyPath="yes" />
+            <File Id="RuntimeFile" DefaultVersion="0.0.62.1" Source="$(var.PayloadDirectory)/logrotate.exe" KeyPath="yes" />
           </Component>
           <Component Id="RuntimeConfig" Guid="CB6233E6-2E62-5449-AFFA-48F0E16D61F8" Win64="no">
             <File Id="RuntimeConfigFile" Source="$(var.PayloadDirectory)/logrotate.exe.config" KeyPath="yes" />

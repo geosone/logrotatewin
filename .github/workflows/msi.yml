@@ -20,7 +20,7 @@ jobs:
       - name: Install MSI compiler
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends wixl msitools git
       - name: Download pinned upstream input
-        run: curl --fail --location --retry 3 https://github.com/geosone/logrotatewin/releases/download/v0.0.60-retain.2/logrotatewin-v0.0.60-retain.2-windows.zip -o "$RUNNER_TEMP/upstream.zip"
+        run: curl --fail --location --retry 3 https://github.com/geosone/logrotatewin/releases/download/v0.0.62-retain.1/logrotatewin-v0.0.62-retain.1-windows.zip -o "$RUNNER_TEMP/upstream.zip"
       - name: Build package and corresponding source
         shell: pwsh
         run: ./New-WindowsMsi.ps1 -ArchivePath "$env:RUNNER_TEMP/upstream.zip" -OutputDirectory "$env:RUNNER_TEMP/package" -Architecture '${{ matrix.arch }}'
@@ -48,7 +48,7 @@ jobs:
         shell: pwsh
         run: |
           $directory = Join-Path $env:RUNNER_TEMP 'package'
-          $package = Join-Path $directory 'logrotatewin-0.0.61-windows-${{ matrix.arch }}.msi'
+          $package = Join-Path $directory 'logrotatewin-0.0.62-windows-${{ matrix.arch }}.msi'
           $line = Get-Content (Join-Path $directory 'SHA256SUMS') | Where-Object { $_ -match '\.msi$' }
           $hash = ($line -split '\s+')[0]
           ./tests/Test-WindowsMsi.ps1 -PackagePath $package -ExpectedSHA256 $hash -TestDirectory "$env:RUNNER_TEMP/msi-test" -Architecture '${{ matrix.arch }}'
@@ -61,7 +61,7 @@ jobs:
           Invoke-WebRequest $url -OutFile $old
           $expected = if ($arch -eq 'x86') { '1fecd4be9daf6043f5e9edd245aed8494b5597dd3de72f42e4000649ca87c9c3' } else { '8ec5dcfe2285d318af763eea963cde06a35757333c2ccb0730bf234bd1e03112' }
           if ((Get-FileHash $old).Hash -ine $expected) { throw 'Old fixture checksum mismatch.' }
-          ./tests/Test-WindowsUpgrade.ps1 -OldPackage $old -NewPackage "$env:RUNNER_TEMP/package/logrotatewin-0.0.61-windows-$arch.msi" -Architecture $arch -TestDirectory "$env:RUNNER_TEMP/upgrade-test"
+          ./tests/Test-WindowsUpgrade.ps1 -OldPackage $old -NewPackage "$env:RUNNER_TEMP/package/logrotatewin-0.0.62-windows-$arch.msi" -Architecture $arch -TestDirectory "$env:RUNNER_TEMP/upgrade-test"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -98,5 +98,5 @@ jobs:
           $lines = Get-ChildItem release -File | ForEach-Object { (Get-FileHash $_.FullName).Hash.ToLowerInvariant() + '  ' + $_.Name }
           [IO.File]::WriteAllLines((Join-Path $PWD 'release/SHA256SUMS'), $lines)
           $files = Get-ChildItem release -File | ForEach-Object FullName
-          gh release create $env:GITHUB_REF_NAME @files --repo $env:GITHUB_REPOSITORY --prerelease --title "LogRotateWin MSI 0.0.61" --notes 'Packages the qualified rotate -1 runtime. x86/x64 installation, repair, archive preservation, major upgrade from the original MSI and uninstall tested before publishing. Corresponding source and SHA256SUMS included. No automatic rotation schedule.'
+          gh release create $env:GITHUB_REF_NAME @files --repo $env:GITHUB_REPOSITORY --prerelease --title "LogRotateWin MSI 0.0.62" --notes 'Packages runtime 0.0.62.1 (rotate -1) and appends the install directory to the system PATH; uninstall removes only that member. x86/x64 installation, repair, archive preservation, major upgrade from the original MSI and uninstall tested before publishing. Corresponding source and SHA256SUMS included. No automatic rotation schedule.'
           if ($LASTEXITCODE) { throw 'Release failed.' }
