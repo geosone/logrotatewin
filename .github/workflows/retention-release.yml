@@ -20,7 +20,7 @@ jobs:
           dotnet build logrotate/logrotate.csproj -c Release
           if ($LASTEXITCODE) { throw 'Build failed.' }
           $fileVersion = [Diagnostics.FileVersionInfo]::GetVersionInfo((Resolve-Path ./logrotate/bin/Release/net48/logrotate.exe)).FileVersion
-          if ([version]$fileVersion -lt [version]'0.0.60.0') { throw ('Runtime file version is below the MSI upgrade boundary: ' + $fileVersion) }
+          if ([version]$fileVersion -lt [version]'0.0.62.0') { throw ('Runtime file version is below the MSI upgrade boundary: ' + $fileVersion) }
           ./tests/Test-KeepArchives.ps1 -ExecutablePath ./logrotate/bin/Release/net48/logrotate.exe
       - name: Package runtime and corresponding source
         shell: pwsh
