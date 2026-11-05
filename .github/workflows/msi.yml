@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install MSI compiler
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends wixl git
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends wixl msitools git
       - name: Download pinned upstream input
         run: curl --fail --location --retry 3 https://github.com/geosone/logrotatewin/releases/download/v0.0.60-retain.2/logrotatewin-v0.0.60-retain.2-windows.zip -o "$RUNNER_TEMP/upstream.zip"
       - name: Build package and corresponding source
